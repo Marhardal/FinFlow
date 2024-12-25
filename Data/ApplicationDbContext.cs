@@ -9,8 +9,11 @@ namespace FinFlow.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-
         }
+
+        public DbSet<CategoryModel> Category { get; set; }
+
+        public DbSet<ItemsModel> Items { get; set; }
 
         public DbSet<ExpenseModel> Expenses { get; set; }
     }

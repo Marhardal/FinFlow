@@ -10,22 +10,23 @@ using FinFlow.Models;
 
 namespace FinFlow.Controllers
 {
-    public class ExpensesController : Controller
+    public class ItemsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ExpensesController(ApplicationDbContext context)
+        public ItemsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Expenses
+        // GET: Items
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Expenses.ToListAsync());
+            var items = _context.Items.Include(i => i.Category).ToList();
+            return View(items);
         }
 
-        // GET: Expenses/Details/5
+        // GET: Items/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +34,47 @@ namespace FinFlow.Controllers
                 return NotFound();
             }
 
-            var expenseModel = await _context.Expenses
+            var itemsModel = await _context.Items
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (expenseModel == null)
+            if (itemsModel == null)
             {
                 return NotFound();
             }
 
-            return View(expenseModel);
+            return View(itemsModel);
         }
 
-        // GET: Expenses/Create
+        // GET: Items/Create
         public IActionResult Create()
         {
-            return View();
+            var model = new ItemsModel
+            {
+                Categories = _context.Category.ToList() // Fetch categories from the database
+            };
+
+            return View(model);
         }
 
-        // POST: Expenses/Create
+        // POST: Items/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Amount,Quantity,Notes")] ExpenseModel expenseModel)
+        public async Task<IActionResult> Create([Bind("Id,Name,SelectedCategoryId,Measurement")] ItemsModel itemsModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(expenseModel);
+                _context.Add(itemsModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(expenseModel);
+
+            // Reload categories to repopulate the dropdown
+            itemsModel.Categories = _context.Category.ToList();
+            return View(itemsModel);
         }
 
-        // GET: Expenses/Edit/5
+
+        // GET: Items/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +82,22 @@ namespace FinFlow.Controllers
                 return NotFound();
             }
 
-            var expenseModel = await _context.Expenses.FindAsync(id);
-            if (expenseModel == null)
+            var itemsModel = await _context.Items.FindAsync(id);
+            if (itemsModel == null)
             {
                 return NotFound();
             }
-            return View(expenseModel);
+            return View(itemsModel);
         }
 
-        // POST: Expenses/Edit/5
+        // POST: Items/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Amount,Quantity,Notes,Date")] ExpenseModel expenseModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Measurement")] ItemsModel itemsModel)
         {
-            if (id != expenseModel.Id)
+            if (id != itemsModel.Id)
             {
                 return NotFound();
             }
@@ -97,12 +106,12 @@ namespace FinFlow.Controllers
             {
                 try
                 {
-                    _context.Update(expenseModel);
+                    _context.Update(itemsModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ExpenseModelExists(expenseModel.Id))
+                    if (!ItemsModelExists(itemsModel.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +122,10 @@ namespace FinFlow.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(expenseModel);
+            return View(itemsModel);
         }
 
-        // GET: Expenses/Delete/5
+        // GET: Items/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +133,34 @@ namespace FinFlow.Controllers
                 return NotFound();
             }
 
-            var expenseModel = await _context.Expenses
+            var itemsModel = await _context.Items
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (expenseModel == null)
+            if (itemsModel == null)
             {
                 return NotFound();
             }
 
-            return View(expenseModel);
+            return View(itemsModel);
         }
 
-        // POST: Expenses/Delete/5
+        // POST: Items/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var expenseModel = await _context.Expenses.FindAsync(id);
-            if (expenseModel != null)
+            var itemsModel = await _context.Items.FindAsync(id);
+            if (itemsModel != null)
             {
-                _context.Expenses.Remove(expenseModel);
+                _context.Items.Remove(itemsModel);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ExpenseModelExists(int id)
+        private bool ItemsModelExists(int id)
         {
-            return _context.Expenses.Any(e => e.Id == id);
+            return _context.Items.Any(e => e.Id == id);
         }
     }
 }
