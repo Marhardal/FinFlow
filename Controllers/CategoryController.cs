@@ -10,22 +10,22 @@ using FinFlow.Models;
 
 namespace FinFlow.Controllers
 {
-    public class CategoriesController : Controller
+    public class CategoryController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public CategoriesController(ApplicationDbContext context)
+        public CategoryController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Categories
+        // GET: Category
         public async Task<IActionResult> Index()
         {
             return View(await _context.Category.ToListAsync());
         }
 
-        // GET: Categories/Details/5
+        // GET: Category/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -43,13 +43,13 @@ namespace FinFlow.Controllers
             return View(categoryModel);
         }
 
-        // GET: Categories/Create
+        // GET: Category/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Categories/Create
+        // POST: Category/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -65,7 +65,7 @@ namespace FinFlow.Controllers
             return View(categoryModel);
         }
 
-        // GET: Categories/Edit/5
+        // GET: Category/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,7 +81,7 @@ namespace FinFlow.Controllers
             return View(categoryModel);
         }
 
-        // POST: Categories/Edit/5
+        // POST: Category/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -116,7 +116,7 @@ namespace FinFlow.Controllers
             return View(categoryModel);
         }
 
-        // GET: Categories/Delete/5
+        // GET: Category/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -134,7 +134,7 @@ namespace FinFlow.Controllers
             return View(categoryModel);
         }
 
-        // POST: Categories/Delete/5
+        // POST: Category/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

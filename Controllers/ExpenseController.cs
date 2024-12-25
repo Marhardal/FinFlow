@@ -10,22 +10,23 @@ using FinFlow.Models;
 
 namespace FinFlow.Controllers
 {
-    public class ExpensesController : Controller
+    public class ExpenseController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ExpensesController(ApplicationDbContext context)
+        public ExpenseController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Expenses
+        // GET: Expense
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Expenses.ToListAsync());
+            var applicationDbContext = _context.Expenses.Include(e => e.Item);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Expenses/Details/5
+        // GET: Expense/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,6 +35,7 @@ namespace FinFlow.Controllers
             }
 
             var expenseModel = await _context.Expenses
+                .Include(e => e.Item)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (expenseModel == null)
             {
@@ -43,18 +45,23 @@ namespace FinFlow.Controllers
             return View(expenseModel);
         }
 
-        // GET: Expenses/Create
+        // GET: Expense/Create
         public IActionResult Create()
         {
-            return View();
+            //ViewData["SelectedItemId"] = new SelectList(_context.Items, "Id", "Id");
+            var expenses = new ExpenseModel
+            {
+                items = _context.Items.ToList()
+            };
+            return View(expenses);
         }
 
-        // POST: Expenses/Create
+        // POST: Expense/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Amount,Quantity,Notes")] ExpenseModel expenseModel)
+        public async Task<IActionResult> Create([Bind("Id,SelectedItemId,Amount,Quantity,Notes,Date")] ExpenseModel expenseModel)
         {
             if (ModelState.IsValid)
             {
@@ -62,10 +69,11 @@ namespace FinFlow.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["SelectedItemId"] = new SelectList(_context.Items, "Id", "Id", expenseModel.SelectedItemId);
             return View(expenseModel);
         }
 
-        // GET: Expenses/Edit/5
+        // GET: Expense/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -78,15 +86,16 @@ namespace FinFlow.Controllers
             {
                 return NotFound();
             }
+            ViewData["SelectedItemId"] = new SelectList(_context.Items, "Id", "Id", expenseModel.SelectedItemId);
             return View(expenseModel);
         }
 
-        // POST: Expenses/Edit/5
+        // POST: Expense/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Amount,Quantity,Notes,Date")] ExpenseModel expenseModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,SelectedItemId,Amount,Quantity,Notes,Date")] ExpenseModel expenseModel)
         {
             if (id != expenseModel.Id)
             {
@@ -113,10 +122,11 @@ namespace FinFlow.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["SelectedItemId"] = new SelectList(_context.Items, "Id", "Id", expenseModel.SelectedItemId);
             return View(expenseModel);
         }
 
-        // GET: Expenses/Delete/5
+        // GET: Expense/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -125,6 +135,7 @@ namespace FinFlow.Controllers
             }
 
             var expenseModel = await _context.Expenses
+                .Include(e => e.Item)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (expenseModel == null)
             {
@@ -134,7 +145,7 @@ namespace FinFlow.Controllers
             return View(expenseModel);
         }
 
-        // POST: Expenses/Delete/5
+        // POST: Expense/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

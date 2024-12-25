@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinFlow.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241222155229_ItemsMigration")]
-    partial class ItemsMigration
+    [Migration("20241225153028_SeedCategories")]
+    partial class SeedCategories
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,6 +45,90 @@ namespace FinFlow.Data.Migrations
                     b.HasIndex("ItemsModelId");
 
                     b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Housing"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Utilities"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Groceries"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Transportation"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Healthcare"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Debt and Savings"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Personal Care"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Entertainment"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Education"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Miscellaneous"
+                        });
+                });
+
+            modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(16, 2)
+                        .HasColumnType("decimal(16,2)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Quantity")
+                        .HasColumnType("float");
+
+                    b.Property<int?>("SelectedItemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SelectedItemId");
+
+                    b.ToTable("Expenses");
                 });
 
             modelBuilder.Entity("FinFlow.Models.ItemsModel", b =>
@@ -55,6 +139,9 @@ namespace FinFlow.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("ExpenseModelId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Measurement")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -63,7 +150,14 @@ namespace FinFlow.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("SelectedCategoryId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ExpenseModelId");
+
+                    b.HasIndex("SelectedCategoryId");
 
                     b.ToTable("Items");
                 });
@@ -277,6 +371,28 @@ namespace FinFlow.Data.Migrations
                         .HasForeignKey("ItemsModelId");
                 });
 
+            modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
+                {
+                    b.HasOne("FinFlow.Models.ItemsModel", "Item")
+                        .WithMany()
+                        .HasForeignKey("SelectedItemId");
+
+                    b.Navigation("Item");
+                });
+
+            modelBuilder.Entity("FinFlow.Models.ItemsModel", b =>
+                {
+                    b.HasOne("FinFlow.Models.ExpenseModel", null)
+                        .WithMany("items")
+                        .HasForeignKey("ExpenseModelId");
+
+                    b.HasOne("FinFlow.Models.CategoryModel", "Category")
+                        .WithMany()
+                        .HasForeignKey("SelectedCategoryId");
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -326,6 +442,11 @@ namespace FinFlow.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
+                {
+                    b.Navigation("items");
                 });
 
             modelBuilder.Entity("FinFlow.Models.ItemsModel", b =>

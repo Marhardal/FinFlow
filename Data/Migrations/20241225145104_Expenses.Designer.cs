@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinFlow.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241222155319_ExpensesMigration")]
-    partial class ExpensesMigration
+    [Migration("20241225145104_Expenses")]
+    partial class Expenses
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -62,17 +62,19 @@ namespace FinFlow.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Notes")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("Quantity")
+                        .HasColumnType("float");
 
-                    b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int?>("SelectedItemId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SelectedItemId");
 
                     b.ToTable("Expenses");
                 });
@@ -96,9 +98,14 @@ namespace FinFlow.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("SelectedCategoryId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ExpenseModelId");
+
+                    b.HasIndex("SelectedCategoryId");
 
                     b.ToTable("Items");
                 });
@@ -312,11 +319,26 @@ namespace FinFlow.Data.Migrations
                         .HasForeignKey("ItemsModelId");
                 });
 
+            modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
+                {
+                    b.HasOne("FinFlow.Models.ItemsModel", "Item")
+                        .WithMany()
+                        .HasForeignKey("SelectedItemId");
+
+                    b.Navigation("Item");
+                });
+
             modelBuilder.Entity("FinFlow.Models.ItemsModel", b =>
                 {
                     b.HasOne("FinFlow.Models.ExpenseModel", null)
                         .WithMany("items")
                         .HasForeignKey("ExpenseModelId");
+
+                    b.HasOne("FinFlow.Models.CategoryModel", "Category")
+                        .WithMany()
+                        .HasForeignKey("SelectedCategoryId");
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
