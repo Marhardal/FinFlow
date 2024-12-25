@@ -4,6 +4,7 @@ using FinFlow.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinFlow.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241225144943_Category")]
+    partial class Category
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,133 +33,13 @@ namespace FinFlow.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ItemsModelId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ItemsModelId");
 
                     b.ToTable("Category");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Housing"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Utilities"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Groceries"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Transportation"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Healthcare"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Debt and Savings"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Personal Care"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Entertainment"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "Education"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "Miscellaneous"
-                        });
-                });
-
-            modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(16, 2)
-                        .HasColumnType("decimal(16,2)");
-
-                    b.Property<DateTime?>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Notes")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Quantity")
-                        .HasColumnType("float");
-
-                    b.Property<int?>("SelectedItemId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SelectedItemId");
-
-                    b.ToTable("Expenses");
-                });
-
-            modelBuilder.Entity("FinFlow.Models.ItemsModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("ExpenseModelId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Measurement")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SelectedCategoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExpenseModelId");
-
-                    b.HasIndex("SelectedCategoryId");
-
-                    b.ToTable("Items");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -361,35 +244,6 @@ namespace FinFlow.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("FinFlow.Models.CategoryModel", b =>
-                {
-                    b.HasOne("FinFlow.Models.ItemsModel", null)
-                        .WithMany("Categories")
-                        .HasForeignKey("ItemsModelId");
-                });
-
-            modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
-                {
-                    b.HasOne("FinFlow.Models.ItemsModel", "Item")
-                        .WithMany()
-                        .HasForeignKey("SelectedItemId");
-
-                    b.Navigation("Item");
-                });
-
-            modelBuilder.Entity("FinFlow.Models.ItemsModel", b =>
-                {
-                    b.HasOne("FinFlow.Models.ExpenseModel", null)
-                        .WithMany("items")
-                        .HasForeignKey("ExpenseModelId");
-
-                    b.HasOne("FinFlow.Models.CategoryModel", "Category")
-                        .WithMany()
-                        .HasForeignKey("SelectedCategoryId");
-
-                    b.Navigation("Category");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -439,16 +293,6 @@ namespace FinFlow.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
-                {
-                    b.Navigation("items");
-                });
-
-            modelBuilder.Entity("FinFlow.Models.ItemsModel", b =>
-                {
-                    b.Navigation("Categories");
                 });
 #pragma warning restore 612, 618
         }

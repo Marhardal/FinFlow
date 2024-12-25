@@ -15,7 +15,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group my-3">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" placeholder="Enter the Item Name."/>
+                <input asp-for="Name" class="form-control" placeholder="Enter the Item Name." />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
@@ -51,5 +51,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FinFlow.Data;
 using FinFlow.Models;
+using FinFlow.Data.Migrations;
 
 namespace FinFlow.Controllers
 {
@@ -22,8 +23,8 @@ namespace FinFlow.Controllers
         // GET: Items
         public async Task<IActionResult> Index()
         {
-            var items = _context.Items.Include(i => i.Category).ToList();
-            return View(items);
+            var applicationDbContext = _context.Items.Include(i => i.Category);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Items/Details/5
@@ -35,6 +36,7 @@ namespace FinFlow.Controllers
             }
 
             var itemsModel = await _context.Items
+                .Include(i => i.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (itemsModel == null)
             {
@@ -47,6 +49,7 @@ namespace FinFlow.Controllers
         // GET: Items/Create
         public IActionResult Create()
         {
+
             var model = new ItemsModel
             {
                 Categories = _context.Category.ToList() // Fetch categories from the database
@@ -57,6 +60,7 @@ namespace FinFlow.Controllers
 
         // POST: Items/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,SelectedCategoryId,Measurement")] ItemsModel itemsModel)
@@ -67,12 +71,11 @@ namespace FinFlow.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
             // Reload categories to repopulate the dropdown
             itemsModel.Categories = _context.Category.ToList();
+            //ViewData["SelectedCategoryId"] = new SelectList(_context.Category, "Id", "Id", itemsModel.SelectedCategoryId);
             return View(itemsModel);
         }
-
 
         // GET: Items/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -87,6 +90,10 @@ namespace FinFlow.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["SelectedCategoryId"] = new SelectList(_context.Category, "Id", "Id", itemsModel.SelectedCategoryId);
+            ViewData["Categories"] = _context.Category.ToList();
+
             return View(itemsModel);
         }
 
@@ -95,7 +102,7 @@ namespace FinFlow.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Measurement")] ItemsModel itemsModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,SelectedCategoryId,Measurement")] ItemsModel itemsModel)
         {
             if (id != itemsModel.Id)
             {
@@ -122,6 +129,7 @@ namespace FinFlow.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["SelectedCategoryId"] = new SelectList(_context.Category, "Id", "Id", itemsModel.SelectedCategoryId);
             return View(itemsModel);
         }
 
@@ -134,6 +142,7 @@ namespace FinFlow.Controllers
             }
 
             var itemsModel = await _context.Items
+                .Include(i => i.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (itemsModel == null)
             {

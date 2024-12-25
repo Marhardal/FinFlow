@@ -1,0 +1,62 @@
+﻿@model FinFlow.Models.ExpenseModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@* <h1>Create</h1> *@
+
+<h4>Create an Expense</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group my-3">
+                <label asp-for="SelectedItemId" class="control-label"></label>
+                <select asp-for="SelectedItemId" class ="form-control">
+                    @foreach (var item in Model.items)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group  my-3">
+                <label asp-for="Notes" class="control-label"></label>
+                <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                @* <input asp-for="Notes" class="form-control" /> *@
+                <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3" style="display: none">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" value="@DateTime.Now" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+<div class="row">
+                    <div class="col-1">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                    <div class="col-2">
+                        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                    </div>
+</div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FinFlow.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class ExpensesMigration : Migration
+    public partial class Expenses : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,21 +23,31 @@ namespace FinFlow.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SelectedItemId = table.Column<int>(type: "int", nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(16,2)", precision: 16, scale: 2, nullable: false),
-                    Quantity = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Notes = table.Column<decimal>(type: "nvarchar(max)", nullable: false),
-                    Date = table.Column<DateTime>(type: "timestamp")
+                    Quantity = table.Column<double>(type: "float", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Expenses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Expenses_Items_SelectedItemId",
+                        column: x => x.SelectedItemId,
+                        principalTable: "Items",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Items_ExpenseModelId",
                 table: "Items",
                 column: "ExpenseModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Expenses_SelectedItemId",
+                table: "Expenses",
+                column: "SelectedItemId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Items_Expenses_ExpenseModelId",
