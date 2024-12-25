@@ -4,6 +4,7 @@ using FinFlow.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinFlow.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241222155229_ItemsMigration")]
+    partial class ItemsMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,37 +47,6 @@ namespace FinFlow.Data.Migrations
                     b.ToTable("Category");
                 });
 
-            modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(16, 2)
-                        .HasColumnType("decimal(16,2)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Notes")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Expenses");
-                });
-
             modelBuilder.Entity("FinFlow.Models.ItemsModel", b =>
                 {
                     b.Property<int>("Id")
@@ -82,9 +54,6 @@ namespace FinFlow.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("ExpenseModelId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Measurement")
                         .IsRequired()
@@ -94,15 +63,7 @@ namespace FinFlow.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SelectedCategoryId")
-                        .IsRequired()
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ExpenseModelId");
-
-                    b.HasIndex("SelectedCategoryId");
 
                     b.ToTable("Items");
                 });
@@ -316,21 +277,6 @@ namespace FinFlow.Data.Migrations
                         .HasForeignKey("ItemsModelId");
                 });
 
-            modelBuilder.Entity("FinFlow.Models.ItemsModel", b =>
-                {
-                    b.HasOne("FinFlow.Models.ExpenseModel", null)
-                        .WithMany("items")
-                        .HasForeignKey("ExpenseModelId");
-
-                    b.HasOne("FinFlow.Models.CategoryModel", "Category")
-                        .WithMany()
-                        .HasForeignKey("SelectedCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -380,11 +326,6 @@ namespace FinFlow.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
-                {
-                    b.Navigation("items");
                 });
 
             modelBuilder.Entity("FinFlow.Models.ItemsModel", b =>
