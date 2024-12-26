@@ -1,4 +1,5 @@
-﻿@model IEnumerable<FinFlow.Models.ExpenseModel>
+﻿@using System.Globalization
+@model IEnumerable<FinFlow.Models.ExpenseModel>
 
 @{
     ViewData["Title"] = "Expense List";
@@ -44,7 +45,11 @@
                     @Html.DisplayFor(modelItem => item.Item.Name)
                 </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Amount)
+                    @{
+                        CultureInfo culture = new CultureInfo("en-MW");
+                        string formatted = item.Amount.ToString("C", culture).Trim();
+                    }
+                @Html.DisplayFor(modelItem => formatted)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)
@@ -57,7 +62,7 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                @* <a asp-action="Details" asp-route-id="@item.Id">Details</a> | *@
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>

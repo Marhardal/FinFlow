@@ -1,21 +1,26 @@
-﻿@model FinFlow.Models.ExpenseModel
+﻿@using System.Globalization
+@model FinFlow.Models.ExpenseModel
 
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+@* <h1>Details</h1> *@
 
 <div>
-    <h4>ExpenseModel</h4>
+    <h4>Expense Details</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Amount)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Amount)
+            @{
+                CultureInfo culture = new CultureInfo("en-MW");
+                string formatted = Model.Amount.ToString("C", culture).Trim();
+            }
+            @Html.DisplayFor(model => formatted)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Quantity)
