@@ -1,18 +1,27 @@
 ﻿@model IEnumerable<FinFlow.Models.ExpenseModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Expense List";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+@* <h1>Index</h1> *@
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="row">
+    <div class="col-10">
+<h3>Expense List</h3>
+    </div>
+    <div class="col-2">
+    <a asp-action="Create" class="btn btn-secondary px-4">New Expense</a>
+    </div>
+</div>
+
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Item)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Amount)
             </th>
@@ -25,15 +34,15 @@
             <th>
                 @Html.DisplayNameFor(model => model.Date)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Item)
-            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Item.Name)
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Amount)
             </td>
@@ -45,9 +54,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Item.Id)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

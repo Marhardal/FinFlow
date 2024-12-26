@@ -11,11 +11,8 @@ namespace FinFlow.Data
         {
         }
 
+
         public DbSet<CategoryModel> Category { get; set; }
-
-        public DbSet<ItemsModel> Items { get; set; }
-
-        public DbSet<ExpenseModel> Expenses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,7 +20,7 @@ namespace FinFlow.Data
 
             // Call the seed method
             modelBuilder.Entity<CategoryModel>().HasData(
-                new CategoryModel {Id = 1, Name = "Housing", /*Description = "Rent, mortgage payments, property taxes, home insurance"*/ },
+                new CategoryModel { Id = 1, Name = "Housing", /*Description = "Rent, mortgage payments, property taxes, home insurance"*/ },
                 new CategoryModel { Id = 2, Name = "Utilities", /*Description = "Electricity, water, gas, internet, phone bills" */},
                 new CategoryModel { Id = 3, Name = "Groceries", /*Description = "Food and household supplies" */},
                 new CategoryModel { Id = 4, Name = "Transportation", /*Description = "Public transport, fuel, car maintenance"*/ },
@@ -35,5 +32,11 @@ namespace FinFlow.Data
                 new CategoryModel { Id = 10, Name = "Miscellaneous", /*Description = "Travel, gifts, pet care"*/ }
             );
         }
+
+        public DbSet<ItemsModel> Items { get; set; }
+
+        public DbSet<ExpenseModel> Expenses { get; set; }
+
+        public DbSet<BudgetModel> Budgets { get; set; }
     }
 }

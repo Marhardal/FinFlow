@@ -20,7 +20,6 @@ namespace FinFlow.Models
 
         public DateTime? Date { get; set; } = default(DateTime?);
 
-
         [ForeignKey("SelectedItemId")]
         public ItemsModel? Item { get; set; } // Navigation property
     }

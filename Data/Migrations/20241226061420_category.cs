@@ -5,7 +5,7 @@
 namespace FinFlow.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Category : Migration
+    public partial class category : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

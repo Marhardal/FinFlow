@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinFlow.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241225144857_initialcreate")]
-    partial class initialcreate
+    [Migration("20241226061615_seedcategory")]
+    partial class seedcategory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,75 @@ namespace FinFlow.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("FinFlow.Models.CategoryModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Housing"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Utilities"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Groceries"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Transportation"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Healthcare"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Debt and Savings"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Personal Care"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Entertainment"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Education"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Miscellaneous"
+                        });
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {

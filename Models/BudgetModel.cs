@@ -15,6 +15,8 @@ namespace FinFlow.Models
         [Precision(16, 2)]
         public decimal Amount { get; set; } = decimal.Zero;
 
+        public DateTime? remindon { get; set; } = default(DateTime?);
+
         public DateTime? CreatedDate { get; set; } = default(DateTime?);
     }
 }

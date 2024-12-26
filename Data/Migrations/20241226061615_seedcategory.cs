@@ -7,26 +7,26 @@
 namespace FinFlow.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedCategories : Migration
+    public partial class seedcategory : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
                 table: "Category",
-                columns: new[] { "Id", "ItemsModelId", "Name" },
+                columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 1, null, "Housing" },
-                    { 2, null, "Utilities" },
-                    { 3, null, "Groceries" },
-                    { 4, null, "Transportation" },
-                    { 5, null, "Healthcare" },
-                    { 6, null, "Debt and Savings" },
-                    { 7, null, "Personal Care" },
-                    { 8, null, "Entertainment" },
-                    { 9, null, "Education" },
-                    { 10, null, "Miscellaneous" }
+                    { 1, "Housing" },
+                    { 2, "Utilities" },
+                    { 3, "Groceries" },
+                    { 4, "Transportation" },
+                    { 5, "Healthcare" },
+                    { 6, "Debt and Savings" },
+                    { 7, "Personal Care" },
+                    { 8, "Entertainment" },
+                    { 9, "Education" },
+                    { 10, "Miscellaneous" }
                 });
         }
 

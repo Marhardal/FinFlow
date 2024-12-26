@@ -5,7 +5,7 @@
 namespace FinFlow.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class Items : Migration
+    public partial class items : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,6 +35,76 @@ namespace FinFlow.Data.Migrations
                         principalTable: "Category",
                         principalColumn: "Id");
                 });
+
+            migrationBuilder.UpdateData(
+                table: "Category",
+                keyColumn: "Id",
+                keyValue: 1,
+                column: "ItemsModelId",
+                value: null);
+
+            migrationBuilder.UpdateData(
+                table: "Category",
+                keyColumn: "Id",
+                keyValue: 2,
+                column: "ItemsModelId",
+                value: null);
+
+            migrationBuilder.UpdateData(
+                table: "Category",
+                keyColumn: "Id",
+                keyValue: 3,
+                column: "ItemsModelId",
+                value: null);
+
+            migrationBuilder.UpdateData(
+                table: "Category",
+                keyColumn: "Id",
+                keyValue: 4,
+                column: "ItemsModelId",
+                value: null);
+
+            migrationBuilder.UpdateData(
+                table: "Category",
+                keyColumn: "Id",
+                keyValue: 5,
+                column: "ItemsModelId",
+                value: null);
+
+            migrationBuilder.UpdateData(
+                table: "Category",
+                keyColumn: "Id",
+                keyValue: 6,
+                column: "ItemsModelId",
+                value: null);
+
+            migrationBuilder.UpdateData(
+                table: "Category",
+                keyColumn: "Id",
+                keyValue: 7,
+                column: "ItemsModelId",
+                value: null);
+
+            migrationBuilder.UpdateData(
+                table: "Category",
+                keyColumn: "Id",
+                keyValue: 8,
+                column: "ItemsModelId",
+                value: null);
+
+            migrationBuilder.UpdateData(
+                table: "Category",
+                keyColumn: "Id",
+                keyValue: 9,
+                column: "ItemsModelId",
+                value: null);
+
+            migrationBuilder.UpdateData(
+                table: "Category",
+                keyColumn: "Id",
+                keyValue: 10,
+                column: "ItemsModelId",
+                value: null);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Category_ItemsModelId",
