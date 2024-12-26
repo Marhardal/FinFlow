@@ -11,8 +11,7 @@ namespace FinFlow.Data
         {
         }
 
-
-        public DbSet<CategoryModel> Category { get; set; }
+        public DbSet<CategoryModel> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,10 +32,11 @@ namespace FinFlow.Data
             );
         }
 
+        public DbSet<BudgetModel> Budgets { get; set; }
+
         public DbSet<ItemsModel> Items { get; set; }
 
         public DbSet<ExpenseModel> Expenses { get; set; }
 
-        public DbSet<BudgetModel> Budgets { get; set; }
     }
 }

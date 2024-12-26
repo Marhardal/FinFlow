@@ -7,13 +7,13 @@
 namespace FinFlow.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class seedcategory : Migration
+    public partial class SeedCategories : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
-                table: "Category",
+                table: "Categories",
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
@@ -34,52 +34,52 @@ namespace FinFlow.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DeleteData(
-                table: "Category",
+                table: "Categories",
                 keyColumn: "Id",
                 keyValue: 1);
 
             migrationBuilder.DeleteData(
-                table: "Category",
+                table: "Categories",
                 keyColumn: "Id",
                 keyValue: 2);
 
             migrationBuilder.DeleteData(
-                table: "Category",
+                table: "Categories",
                 keyColumn: "Id",
                 keyValue: 3);
 
             migrationBuilder.DeleteData(
-                table: "Category",
+                table: "Categories",
                 keyColumn: "Id",
                 keyValue: 4);
 
             migrationBuilder.DeleteData(
-                table: "Category",
+                table: "Categories",
                 keyColumn: "Id",
                 keyValue: 5);
 
             migrationBuilder.DeleteData(
-                table: "Category",
+                table: "Categories",
                 keyColumn: "Id",
                 keyValue: 6);
 
             migrationBuilder.DeleteData(
-                table: "Category",
+                table: "Categories",
                 keyColumn: "Id",
                 keyValue: 7);
 
             migrationBuilder.DeleteData(
-                table: "Category",
+                table: "Categories",
                 keyColumn: "Id",
                 keyValue: 8);
 
             migrationBuilder.DeleteData(
-                table: "Category",
+                table: "Categories",
                 keyColumn: "Id",
                 keyValue: 9);
 
             migrationBuilder.DeleteData(
-                table: "Category",
+                table: "Categories",
                 keyColumn: "Id",
                 keyValue: 10);
         }

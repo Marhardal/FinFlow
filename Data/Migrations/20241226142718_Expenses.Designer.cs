@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinFlow.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241226061918_Expenses")]
+    [Migration("20241226142718_Expenses")]
     partial class Expenses
     {
         /// <inheritdoc />
@@ -24,6 +24,43 @@ namespace FinFlow.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("FinFlow.Models.BudgetModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(16, 2)
+                        .HasColumnType("decimal(16,2)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ExpenseModelId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("remindon")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpenseModelId");
+
+                    b.ToTable("Budgets");
+                });
 
             modelBuilder.Entity("FinFlow.Models.CategoryModel", b =>
                 {
@@ -44,7 +81,7 @@ namespace FinFlow.Data.Migrations
 
                     b.HasIndex("ItemsModelId");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -111,8 +148,14 @@ namespace FinFlow.Data.Migrations
                         .HasPrecision(16, 2)
                         .HasColumnType("decimal(16,2)");
 
+                    b.Property<int?>("BudgetID")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("ItemId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Notes")
                         .IsRequired()
@@ -121,12 +164,11 @@ namespace FinFlow.Data.Migrations
                     b.Property<double>("Quantity")
                         .HasColumnType("float");
 
-                    b.Property<int?>("SelectedItemId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("SelectedItemId");
+                    b.HasIndex("BudgetID");
+
+                    b.HasIndex("ItemId");
 
                     b.ToTable("Expenses");
                 });
@@ -139,6 +181,9 @@ namespace FinFlow.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ExpenseModelId")
                         .HasColumnType("int");
 
@@ -150,14 +195,11 @@ namespace FinFlow.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SelectedCategoryId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ExpenseModelId");
+                    b.HasIndex("CategoryId");
 
-                    b.HasIndex("SelectedCategoryId");
+                    b.HasIndex("ExpenseModelId");
 
                     b.ToTable("Items");
                 });
@@ -364,6 +406,13 @@ namespace FinFlow.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("FinFlow.Models.BudgetModel", b =>
+                {
+                    b.HasOne("FinFlow.Models.ExpenseModel", null)
+                        .WithMany("Budgets")
+                        .HasForeignKey("ExpenseModelId");
+                });
+
             modelBuilder.Entity("FinFlow.Models.CategoryModel", b =>
                 {
                     b.HasOne("FinFlow.Models.ItemsModel", null)
@@ -373,22 +422,28 @@ namespace FinFlow.Data.Migrations
 
             modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
                 {
+                    b.HasOne("FinFlow.Models.BudgetModel", "Budget")
+                        .WithMany()
+                        .HasForeignKey("BudgetID");
+
                     b.HasOne("FinFlow.Models.ItemsModel", "Item")
                         .WithMany()
-                        .HasForeignKey("SelectedItemId");
+                        .HasForeignKey("ItemId");
+
+                    b.Navigation("Budget");
 
                     b.Navigation("Item");
                 });
 
             modelBuilder.Entity("FinFlow.Models.ItemsModel", b =>
                 {
+                    b.HasOne("FinFlow.Models.CategoryModel", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+
                     b.HasOne("FinFlow.Models.ExpenseModel", null)
                         .WithMany("items")
                         .HasForeignKey("ExpenseModelId");
-
-                    b.HasOne("FinFlow.Models.CategoryModel", "Category")
-                        .WithMany()
-                        .HasForeignKey("SelectedCategoryId");
 
                     b.Navigation("Category");
                 });
@@ -446,6 +501,8 @@ namespace FinFlow.Data.Migrations
 
             modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
                 {
+                    b.Navigation("Budgets");
+
                     b.Navigation("items");
                 });
 

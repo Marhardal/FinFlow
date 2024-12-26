@@ -22,7 +22,7 @@ namespace FinFlow.Controllers
         // GET: Category
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Category.ToListAsync());
+            return View(await _context.Categories.ToListAsync());
         }
 
         // GET: Category/Details/5
@@ -33,7 +33,7 @@ namespace FinFlow.Controllers
                 return NotFound();
             }
 
-            var categoryModel = await _context.Category
+            var categoryModel = await _context.Categories
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (categoryModel == null)
             {
@@ -73,7 +73,7 @@ namespace FinFlow.Controllers
                 return NotFound();
             }
 
-            var categoryModel = await _context.Category.FindAsync(id);
+            var categoryModel = await _context.Categories.FindAsync(id);
             if (categoryModel == null)
             {
                 return NotFound();
@@ -124,7 +124,7 @@ namespace FinFlow.Controllers
                 return NotFound();
             }
 
-            var categoryModel = await _context.Category
+            var categoryModel = await _context.Categories
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (categoryModel == null)
             {
@@ -139,10 +139,10 @@ namespace FinFlow.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var categoryModel = await _context.Category.FindAsync(id);
+            var categoryModel = await _context.Categories.FindAsync(id);
             if (categoryModel != null)
             {
-                _context.Category.Remove(categoryModel);
+                _context.Categories.Remove(categoryModel);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +151,7 @@ namespace FinFlow.Controllers
 
         private bool CategoryModelExists(int id)
         {
-            return _context.Category.Any(e => e.Id == id);
+            return _context.Categories.Any(e => e.Id == id);
         }
     }
 }

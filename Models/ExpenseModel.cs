@@ -7,9 +7,13 @@ namespace FinFlow.Models
     {
         public int Id { get; set; }
         
-        public int? SelectedItemId { get; set; } // For the selected category
+        public int? ItemId { get; set; }
+
+        public int? BudgetID { get; set; } // For the selected category
 
         public ICollection<ItemsModel> items { get; set; } = new List<ItemsModel>();
+
+        public ICollection<BudgetModel> Budgets { get; set; } = new List<BudgetModel>();
 
         [Precision(16,2)]
         public decimal Amount { get; set; }
@@ -20,7 +24,10 @@ namespace FinFlow.Models
 
         public DateTime? Date { get; set; } = default(DateTime?);
 
-        [ForeignKey("SelectedItemId")]
+        [ForeignKey("ItemId")]
         public ItemsModel? Item { get; set; } // Navigation property
+
+        [ForeignKey("BudgetID")]
+        public BudgetModel? Budget { get; set; } // Navigation property
     }
 }

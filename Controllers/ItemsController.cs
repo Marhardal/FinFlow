@@ -52,7 +52,7 @@ namespace FinFlow.Controllers
 
             var model = new ItemsModel
             {
-                Categories = _context.Category.ToList() // Fetch categories from the database
+                Categories = _context.Categories.ToList() // Fetch categories from the database
             };
 
             return View(model);
@@ -63,7 +63,7 @@ namespace FinFlow.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,SelectedCategoryId,Measurement")] ItemsModel itemsModel)
+        public async Task<IActionResult> Create([Bind("Id,Name,CategoryId,Measurement")] ItemsModel itemsModel)
         {
             if (ModelState.IsValid)
             {
@@ -72,7 +72,7 @@ namespace FinFlow.Controllers
                 return RedirectToAction(nameof(Index));
             }
             // Reload categories to repopulate the dropdown
-            itemsModel.Categories = _context.Category.ToList();
+            itemsModel.Categories = _context.Categories.ToList();
             //ViewData["SelectedCategoryId"] = new SelectList(_context.Category, "Id", "Id", itemsModel.SelectedCategoryId);
             return View(itemsModel);
         }
@@ -91,8 +91,8 @@ namespace FinFlow.Controllers
                 return NotFound();
             }
 
-            ViewData["SelectedCategoryId"] = new SelectList(_context.Category, "Id", "Id", itemsModel.SelectedCategoryId);
-            ViewData["Categories"] = _context.Category.ToList();
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", itemsModel.CategoryId);
+            ViewData["Categories"] = _context.Categories.ToList();
 
             return View(itemsModel);
         }
@@ -102,7 +102,7 @@ namespace FinFlow.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,SelectedCategoryId,Measurement")] ItemsModel itemsModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CategoryId,Measurement")] ItemsModel itemsModel)
         {
             if (id != itemsModel.Id)
             {
@@ -129,7 +129,7 @@ namespace FinFlow.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SelectedCategoryId"] = new SelectList(_context.Category, "Id", "Id", itemsModel.SelectedCategoryId);
+            ViewData["SelectedCategoryId"] = new SelectList(_context.Categories, "Id", "Id", itemsModel.CategoryId);
             return View(itemsModel);
         }
 

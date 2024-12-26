@@ -17,13 +17,20 @@ namespace FinFlow.Data.Migrations
                 type: "int",
                 nullable: true);
 
+            migrationBuilder.AddColumn<int>(
+                name: "ExpenseModelId",
+                table: "Budgets",
+                type: "int",
+                nullable: true);
+
             migrationBuilder.CreateTable(
                 name: "Expenses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SelectedItemId = table.Column<int>(type: "int", nullable: true),
+                    ItemId = table.Column<int>(type: "int", nullable: true),
+                    BudgetID = table.Column<int>(type: "int", nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(16,2)", precision: 16, scale: 2, nullable: false),
                     Quantity = table.Column<double>(type: "float", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -33,8 +40,13 @@ namespace FinFlow.Data.Migrations
                 {
                     table.PrimaryKey("PK_Expenses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Expenses_Items_SelectedItemId",
-                        column: x => x.SelectedItemId,
+                        name: "FK_Expenses_Budgets_BudgetID",
+                        column: x => x.BudgetID,
+                        principalTable: "Budgets",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Expenses_Items_ItemId",
+                        column: x => x.ItemId,
                         principalTable: "Items",
                         principalColumn: "Id");
                 });
@@ -45,9 +57,26 @@ namespace FinFlow.Data.Migrations
                 column: "ExpenseModelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Expenses_SelectedItemId",
+                name: "IX_Budgets_ExpenseModelId",
+                table: "Budgets",
+                column: "ExpenseModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Expenses_BudgetID",
                 table: "Expenses",
-                column: "SelectedItemId");
+                column: "BudgetID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Expenses_ItemId",
+                table: "Expenses",
+                column: "ItemId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Budgets_Expenses_ExpenseModelId",
+                table: "Budgets",
+                column: "ExpenseModelId",
+                principalTable: "Expenses",
+                principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Items_Expenses_ExpenseModelId",
@@ -61,6 +90,10 @@ namespace FinFlow.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
+                name: "FK_Budgets_Expenses_ExpenseModelId",
+                table: "Budgets");
+
+            migrationBuilder.DropForeignKey(
                 name: "FK_Items_Expenses_ExpenseModelId",
                 table: "Items");
 
@@ -71,9 +104,17 @@ namespace FinFlow.Data.Migrations
                 name: "IX_Items_ExpenseModelId",
                 table: "Items");
 
+            migrationBuilder.DropIndex(
+                name: "IX_Budgets_ExpenseModelId",
+                table: "Budgets");
+
             migrationBuilder.DropColumn(
                 name: "ExpenseModelId",
                 table: "Items");
+
+            migrationBuilder.DropColumn(
+                name: "ExpenseModelId",
+                table: "Budgets");
         }
     }
 }

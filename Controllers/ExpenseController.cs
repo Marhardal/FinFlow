@@ -61,7 +61,7 @@ namespace FinFlow.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,SelectedItemId,Amount,Quantity,Notes,Date")] ExpenseModel expenseModel)
+        public async Task<IActionResult> Create([Bind("Id,ItemId,Amount,Quantity,Notes,Date")] ExpenseModel expenseModel)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +69,7 @@ namespace FinFlow.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SelectedItemId"] = new SelectList(_context.Items, "Id", "Id", expenseModel.SelectedItemId);
+            ViewData["SelectedItemId"] = new SelectList(_context.Items, "Id", "Id", expenseModel.ItemId);
             return View(expenseModel);
         }
 
@@ -86,7 +86,7 @@ namespace FinFlow.Controllers
             {
                 return NotFound();
             }
-            ViewData["SelectedItemId"] = new SelectList(_context.Items, "Id", "Id", expenseModel.SelectedItemId);
+            ViewData["SelectedItemId"] = new SelectList(_context.Items, "Id", "Id", expenseModel.ItemId);
             return View(expenseModel);
         }
 
@@ -95,7 +95,7 @@ namespace FinFlow.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SelectedItemId,Amount,Quantity,Notes,Date")] ExpenseModel expenseModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ItemId,Amount,Quantity,Notes,Date")] ExpenseModel expenseModel)
         {
             if (id != expenseModel.Id)
             {
@@ -122,7 +122,7 @@ namespace FinFlow.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SelectedItemId"] = new SelectList(_context.Items, "Id", "Id", expenseModel.SelectedItemId);
+            ViewData["SelectedItemId"] = new SelectList(_context.Items, "Id", "Id", expenseModel.ItemId);
             return View(expenseModel);
         }
 
