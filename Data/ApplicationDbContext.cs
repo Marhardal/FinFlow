@@ -30,6 +30,22 @@ namespace FinFlow.Data
                 new CategoryModel { Id = 9, Name = "Education", /*Description = "Tuition, books, online courses"*/ },
                 new CategoryModel { Id = 10, Name = "Miscellaneous", /*Description = "Travel, gifts, pet care"*/ }
             );
+
+            modelBuilder.Entity<ExpenseModel>()
+              .HasOne(e => e.Budget) // Each Expense has one Budget
+              .WithMany(b => b.expenses) // Each Budget can have many Expenses
+              .HasForeignKey(e => e.BudgetID) // Foreign key in ExpenseModel
+              .OnDelete(DeleteBehavior.Cascade); // Optional: Define delete behavior
+            
+            modelBuilder.Entity<ItemsModel>()
+    .HasOne(i => i.Category)
+    .WithMany(c => c.Items)
+    .HasForeignKey(i => i.CategoryId);
+
+
+
+
+            base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<BudgetModel> Budgets { get; set; }

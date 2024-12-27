@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinFlow.Models
 {
@@ -18,5 +19,8 @@ namespace FinFlow.Models
         public DateTime? remindon { get; set; } = default(DateTime?);
 
         public DateTime? CreatedDate { get; set; } = default(DateTime?);
+
+        //[NotMapped]
+        public ICollection<ExpenseModel>? expenses { get; set; }
     }
 }

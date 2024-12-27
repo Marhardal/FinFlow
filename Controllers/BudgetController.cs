@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FinFlow.Data;
 using FinFlow.Models;
+using FinFlow.Data.Migrations;
 
 namespace FinFlow.Controllers
 {
@@ -34,7 +35,9 @@ namespace FinFlow.Controllers
             }
 
             var budgetModel = await _context.Budgets
-                .FirstOrDefaultAsync(m => m.Id == id);
+    .Include(b => b.expenses)
+    .ThenInclude(e => e.Item) // Include related Item if it's a navigation property
+    .FirstOrDefaultAsync(b => b.Id == id);
             if (budgetModel == null)
             {
                 return NotFound();

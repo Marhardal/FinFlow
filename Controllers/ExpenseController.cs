@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FinFlow.Data;
 using FinFlow.Models;
+using FinFlow.Data.Migrations;
 
 namespace FinFlow.Controllers
 {
@@ -36,6 +37,7 @@ namespace FinFlow.Controllers
 
             var expenseModel = await _context.Expenses
                 .Include(e => e.Item)
+                .ThenInclude(i => i.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (expenseModel == null)
             {
@@ -46,13 +48,17 @@ namespace FinFlow.Controllers
         }
 
         // GET: Expense/Create
-        public IActionResult Create()
+        public IActionResult Create(int BudgetID)
         {
             //ViewData["SelectedItemId"] = new SelectList(_context.Items, "Id", "Id");
             var expenses = new ExpenseModel
             {
                 items = _context.Items.ToList()
             };
+            ViewBag.BudgetID = BudgetID;
+
+            // Load other necessary data for the view
+            ViewData["SelectedItemId"] = new SelectList(_context.Items, "Id", "Name");
             return View(expenses);
         }
 
@@ -61,32 +67,35 @@ namespace FinFlow.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ItemId,Amount,Quantity,Notes,Date")] ExpenseModel expenseModel)
+        public async Task<IActionResult> Create([Bind("Id,ItemId,Amount,Quantity,Notes,Date")] ExpenseModel expenseModel, int BudgetID)
         {
             if (ModelState.IsValid)
             {
+                expenseModel.BudgetID = BudgetID;
                 _context.Add(expenseModel);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                await _context.SaveChangesAsync(); 
+                return RedirectToAction("Details", "Budget", new { id = BudgetID });
             }
             ViewData["SelectedItemId"] = new SelectList(_context.Items, "Id", "Id", expenseModel.ItemId);
             return View(expenseModel);
         }
 
         // GET: Expense/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? ExpenseID, int? BudgetID)
         {
-            if (id == null)
+            if (ExpenseID == null)
             {
                 return NotFound();
             }
 
-            var expenseModel = await _context.Expenses.FindAsync(id);
+            var expenseModel = await _context.Expenses.FindAsync(ExpenseID);
             if (expenseModel == null)
             {
                 return NotFound();
             }
             ViewData["SelectedItemId"] = new SelectList(_context.Items, "Id", "Id", expenseModel.ItemId);
+            ViewData["Items"] = _context.Items.ToList();
+            ViewBag.BudgetID = BudgetID;
             return View(expenseModel);
         }
 
@@ -95,9 +104,9 @@ namespace FinFlow.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ItemId,Amount,Quantity,Notes,Date")] ExpenseModel expenseModel)
+        public async Task<IActionResult> Edit(int Id, [Bind("Id,ItemId,Amount,Quantity,Notes,Date")] ExpenseModel expenseModel, int? BudgetID)
         {
-            if (id != expenseModel.Id)
+            if (Id != expenseModel.Id)
             {
                 return NotFound();
             }
@@ -106,6 +115,7 @@ namespace FinFlow.Controllers
             {
                 try
                 {
+                    expenseModel.BudgetID = BudgetID;
                     _context.Update(expenseModel);
                     await _context.SaveChangesAsync();
                 }
@@ -120,23 +130,23 @@ namespace FinFlow.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Budget", new { id = BudgetID });
             }
             ViewData["SelectedItemId"] = new SelectList(_context.Items, "Id", "Id", expenseModel.ItemId);
             return View(expenseModel);
         }
 
         // GET: Expense/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? ExpenseID)
         {
-            if (id == null)
+            if (ExpenseID == null)
             {
                 return NotFound();
             }
 
             var expenseModel = await _context.Expenses
                 .Include(e => e.Item)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == ExpenseID);
             if (expenseModel == null)
             {
                 return NotFound();

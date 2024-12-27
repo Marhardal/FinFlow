@@ -58,3 +58,62 @@
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+<hr />
+<div class="row">
+    <div class="col-10">
+        <h4>Budgeted Expenses</h4>
+    </div>
+    <div class="col-2">
+        <a asp-action="Create" asp-controller="Expense" asp-route-BudgetID="@Model?.Id">Add an Expense</a>
+    </div>
+</div>
+<hr />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Item
+            </th>
+            <th>
+                Amount
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Date
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.expenses)
+        {
+            <tr>
+                <td>
+                    @item.Item.Name
+                </td>
+                <td>
+                    @{
+                        CultureInfo culture1 = new CultureInfo("en-MW");
+                        string formatted1 = item.Amount.ToString("C", culture).Trim();
+                    }
+                    @formatted1
+                </td>
+                <td>
+                    @item.Quantity
+                </td>
+                <td>
+                    @item.Date
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-controller="Expense" asp-route-BudgetID="@Model?.Id" asp-route-ExpenseID="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-controller="Expense" asp-route-BudgetID="@Model?.Id" asp-route-ExpenseID="@item.Id" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-controller="Expense" asp-route-BudgetID="@Model?.Id" asp-route-ExpenseID="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
