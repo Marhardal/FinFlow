@@ -54,5 +54,8 @@ namespace FinFlow.Data
 
         public DbSet<ExpenseModel> Expenses { get; set; }
 
+        public DbSet<IncomeCategoryModel> IncomeCategories { get; set; }
+
+        public DbSet<IncomeModel> Incomes { get; set; }
     }
 }
