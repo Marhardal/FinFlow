@@ -16,6 +16,8 @@ namespace FinFlow.Models
         [Precision(18, 2)]
         public decimal Amount { get; set; }
 
+        public bool Status { get; set; }
+
         public DateTime Date { get; set; } = DateTime.Now;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
