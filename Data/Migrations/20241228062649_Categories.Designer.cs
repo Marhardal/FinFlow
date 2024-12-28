@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinFlow.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241226142349_SeedCategories")]
-    partial class SeedCategories
+    [Migration("20241228062649_Categories")]
+    partial class Categories
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,58 +40,6 @@ namespace FinFlow.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Housing"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Utilities"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Groceries"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Transportation"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Healthcare"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Debt and Savings"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Personal Care"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Entertainment"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "Education"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "Miscellaneous"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

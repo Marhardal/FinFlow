@@ -23,7 +23,7 @@ namespace FinFlow.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CategoryID = table.Column<int>(type: "int", nullable: true),
+                    incCategoryID = table.Column<int>(type: "int", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
@@ -34,11 +34,53 @@ namespace FinFlow.Data.Migrations
                 {
                     table.PrimaryKey("PK_Incomes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Incomes_IncomeCategories_CategoryID",
-                        column: x => x.CategoryID,
+                        name: "FK_Incomes_IncomeCategories_incCategoryID",
+                        column: x => x.incCategoryID,
                         principalTable: "IncomeCategories",
                         principalColumn: "Id");
                 });
+
+            migrationBuilder.UpdateData(
+                table: "IncomeCategories",
+                keyColumn: "Id",
+                keyValue: 1,
+                column: "IncomeModelId",
+                value: null);
+
+            migrationBuilder.UpdateData(
+                table: "IncomeCategories",
+                keyColumn: "Id",
+                keyValue: 2,
+                column: "IncomeModelId",
+                value: null);
+
+            migrationBuilder.UpdateData(
+                table: "IncomeCategories",
+                keyColumn: "Id",
+                keyValue: 3,
+                column: "IncomeModelId",
+                value: null);
+
+            migrationBuilder.UpdateData(
+                table: "IncomeCategories",
+                keyColumn: "Id",
+                keyValue: 4,
+                column: "IncomeModelId",
+                value: null);
+
+            migrationBuilder.UpdateData(
+                table: "IncomeCategories",
+                keyColumn: "Id",
+                keyValue: 5,
+                column: "IncomeModelId",
+                value: null);
+
+            migrationBuilder.UpdateData(
+                table: "IncomeCategories",
+                keyColumn: "Id",
+                keyValue: 6,
+                column: "IncomeModelId",
+                value: null);
 
             migrationBuilder.CreateIndex(
                 name: "IX_IncomeCategories_IncomeModelId",
@@ -46,9 +88,9 @@ namespace FinFlow.Data.Migrations
                 column: "IncomeModelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Incomes_CategoryID",
+                name: "IX_Incomes_incCategoryID",
                 table: "Incomes",
-                column: "CategoryID");
+                column: "incCategoryID");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_IncomeCategories_Incomes_IncomeModelId",

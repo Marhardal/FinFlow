@@ -13,9 +13,44 @@ namespace FinFlow.Data
 
         public DbSet<CategoryModel> Categories { get; set; }
 
+        public DbSet<IncomeCategoryModel> IncomeCategories { get; set; }
+
+        public DbSet<IncomeModel> Incomes { get; set; }
+
+        public DbSet<ItemsModel> Items { get; set; }
+
+        public DbSet<ExpenseModel> Expenses { get; set; }
+
+        public DbSet<BudgetModel> Budgets { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ExpenseModel>()
+              .HasOne(e => e.Budget) // Each Expense has one Budget
+              .WithMany(b => b.expenses) // Each Budget can have many Expenses
+              .HasForeignKey(e => e.BudgetID) // Foreign key in ExpenseModel
+              .OnDelete(DeleteBehavior.Cascade); // Optional: Define delete behavior
+
+            modelBuilder.Entity<ItemsModel>()
+                .HasOne(i => i.Category)
+                .WithMany(c => c.Items)
+                .HasForeignKey(i => i.CategoryId);
+
+            modelBuilder.Entity<IncomeModel>()
+                .HasOne(a => a.incomeCategory)
+                .WithMany(d => d.incomes)
+                .HasForeignKey(a => a.incCategoryID);
+
+            modelBuilder.Entity<IncomeCategoryModel>().HasData(
+                new IncomeCategoryModel { Id = 1, Name = "Salary"/*, Description = "Monthly salary from employment" */},
+                new IncomeCategoryModel { Id = 2, Name = "Freelance"/*, Description = "Income from freelance work"*/ },
+                new IncomeCategoryModel { Id = 3, Name = "Investments"/*, Description = "Returns from investments"*/ },
+                new IncomeCategoryModel { Id = 4, Name = "Bonus" },
+                new IncomeCategoryModel { Id = 5, Name = "Commissions" },
+                new IncomeCategoryModel { Id = 6, Name = "Gifts" }
+            );
 
             // Call the seed method
             modelBuilder.Entity<CategoryModel>().HasData(
@@ -31,31 +66,7 @@ namespace FinFlow.Data
                 new CategoryModel { Id = 10, Name = "Miscellaneous", /*Description = "Travel, gifts, pet care"*/ }
             );
 
-            modelBuilder.Entity<ExpenseModel>()
-              .HasOne(e => e.Budget) // Each Expense has one Budget
-              .WithMany(b => b.expenses) // Each Budget can have many Expenses
-              .HasForeignKey(e => e.BudgetID) // Foreign key in ExpenseModel
-              .OnDelete(DeleteBehavior.Cascade); // Optional: Define delete behavior
-            
-            modelBuilder.Entity<ItemsModel>()
-    .HasOne(i => i.Category)
-    .WithMany(c => c.Items)
-    .HasForeignKey(i => i.CategoryId);
-
-
-
-
             base.OnModelCreating(modelBuilder);
         }
-
-        public DbSet<BudgetModel> Budgets { get; set; }
-
-        public DbSet<ItemsModel> Items { get; set; }
-
-        public DbSet<ExpenseModel> Expenses { get; set; }
-
-        public DbSet<IncomeCategoryModel> IncomeCategories { get; set; }
-
-        public DbSet<IncomeModel> Incomes { get; set; }
     }
 }

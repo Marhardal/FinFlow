@@ -6,6 +6,7 @@ namespace FinFlow.Models
     public class ItemsModel
     {
         public int Id { get; set; }
+
         public string Name { get; set; } = string.Empty;
 
         //[Required(ErrorMessage = "Please select a category")]

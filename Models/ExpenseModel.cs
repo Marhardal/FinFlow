@@ -13,7 +13,7 @@ namespace FinFlow.Models
 
         public ICollection<ItemsModel> items { get; set; } = new List<ItemsModel>();
 
-        public ICollection<BudgetModel> Budgets { get; set; } = new List<BudgetModel>();
+        //public ICollection<BudgetModel> Budgets { get; set; } = new List<BudgetModel>();
 
         [Precision(16,2)]
         public decimal Amount { get; set; }

@@ -3,13 +3,27 @@
 
 // Write your JavaScript code.
 function formatCurrency(input) {
-    let value = input.value.replace(/,/g, '').trim();
+    let value = input.value.replace(/,/g, '').trim(); // Remove commas
     if (!isNaN(value) && value) {
+        // Preserve the caret position
+        const caretPosition = input.selectionStart;
+
+        // Format the number
         let formatted = parseFloat(value).toLocaleString('en-MW', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
+
+        // Update the input value with the formatted string
         input.value = formatted;
+
+        // Adjust caret position to account for formatting changes
+        const decimalIndex = formatted.indexOf('.');
+        if (decimalIndex >= 0 && caretPosition > decimalIndex) {
+            input.setSelectionRange(decimalIndex + 3, decimalIndex + 3); // Move cursor past decimal
+        } else {
+            input.setSelectionRange(caretPosition, caretPosition);
+        }
     }
 }
 
@@ -23,6 +37,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Format as the user types
 document.querySelectorAll('.currency-input').forEach(input => {
-    input.addEventListener('input', () => formatCurrency(input));
+    input.addEventListener('input', () => {
+        const cursorBefore = input.selectionStart;
+        formatCurrency(input);
+        const cursorAfter = input.selectionStart;
+        input.setSelectionRange(cursorBefore, cursorAfter); // Maintain cursor
+    });
 });
-

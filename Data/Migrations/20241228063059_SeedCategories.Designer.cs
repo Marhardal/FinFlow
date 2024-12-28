@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinFlow.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241226142230_Categories")]
-    partial class Categories
+    [Migration("20241228063059_SeedCategories")]
+    partial class SeedCategories
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,106 @@ namespace FinFlow.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Housing"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Utilities"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Groceries"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Transportation"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Healthcare"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Debt and Savings"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Personal Care"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Entertainment"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Education"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Miscellaneous"
+                        });
+                });
+
+            modelBuilder.Entity("FinFlow.Models.IncomeCategoryModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IncomeCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Salary"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Freelance"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Investments"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Bonus"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Commissions"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Gifts"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

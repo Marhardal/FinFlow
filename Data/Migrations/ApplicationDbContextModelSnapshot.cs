@@ -40,9 +40,6 @@ namespace FinFlow.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ExpenseModelId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -53,8 +50,6 @@ namespace FinFlow.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ExpenseModelId");
 
                     b.ToTable("Budgets");
                 });
@@ -148,6 +143,9 @@ namespace FinFlow.Data.Migrations
                     b.Property<int?>("BudgetID")
                         .HasColumnType("int");
 
+                    b.Property<int?>("BudgetModelId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("Date")
                         .HasColumnType("datetime2");
 
@@ -163,7 +161,7 @@ namespace FinFlow.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BudgetID");
+                    b.HasIndex("BudgetModelId");
 
                     b.HasIndex("ItemId");
 
@@ -189,6 +187,38 @@ namespace FinFlow.Data.Migrations
                     b.HasIndex("IncomeModelId");
 
                     b.ToTable("IncomeCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Salary"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Freelance"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Investments"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Bonus"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Commissions"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Gifts"
+                        });
                 });
 
             modelBuilder.Entity("FinFlow.Models.IncomeModel", b =>
@@ -203,9 +233,6 @@ namespace FinFlow.Data.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("CategoryID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -218,9 +245,12 @@ namespace FinFlow.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("incCategoryID")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryID");
+                    b.HasIndex("incCategoryID");
 
                     b.ToTable("Incomes");
                 });
@@ -458,13 +488,6 @@ namespace FinFlow.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("FinFlow.Models.BudgetModel", b =>
-                {
-                    b.HasOne("FinFlow.Models.ExpenseModel", null)
-                        .WithMany("Budgets")
-                        .HasForeignKey("ExpenseModelId");
-                });
-
             modelBuilder.Entity("FinFlow.Models.CategoryModel", b =>
                 {
                     b.HasOne("FinFlow.Models.ItemsModel", null)
@@ -474,16 +497,13 @@ namespace FinFlow.Data.Migrations
 
             modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
                 {
-                    b.HasOne("FinFlow.Models.BudgetModel", "Budget")
+                    b.HasOne("FinFlow.Models.BudgetModel", null)
                         .WithMany("expenses")
-                        .HasForeignKey("BudgetID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("BudgetModelId");
 
                     b.HasOne("FinFlow.Models.ItemsModel", "Item")
                         .WithMany()
                         .HasForeignKey("ItemId");
-
-                    b.Navigation("Budget");
 
                     b.Navigation("Item");
                 });
@@ -498,8 +518,8 @@ namespace FinFlow.Data.Migrations
             modelBuilder.Entity("FinFlow.Models.IncomeModel", b =>
                 {
                     b.HasOne("FinFlow.Models.IncomeCategoryModel", "incomeCategory")
-                        .WithMany()
-                        .HasForeignKey("CategoryID");
+                        .WithMany("incomes")
+                        .HasForeignKey("incCategoryID");
 
                     b.Navigation("incomeCategory");
                 });
@@ -580,9 +600,12 @@ namespace FinFlow.Data.Migrations
 
             modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
                 {
-                    b.Navigation("Budgets");
-
                     b.Navigation("items");
+                });
+
+            modelBuilder.Entity("FinFlow.Models.IncomeCategoryModel", b =>
+                {
+                    b.Navigation("incomes");
                 });
 
             modelBuilder.Entity("FinFlow.Models.IncomeModel", b =>

@@ -6,25 +6,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FinFlow.Data;
+using FinFlow.Models;
 
-namespace FinFlow.Models
+namespace FinFlow.Controllers
 {
-    public class IncomeCategoryController : Controller
+    public class IncomeController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public IncomeCategoryController(ApplicationDbContext context)
+        public IncomeController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: IncomeCategory
+        // GET: Income
         public async Task<IActionResult> Index()
         {
-            return View(await _context.IncomeCategories.ToListAsync());
+            var applicationDbContext = _context.Incomes.Include(i => i.incomeCategory);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: IncomeCategory/Details/5
+        // GET: Income/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -32,39 +34,47 @@ namespace FinFlow.Models
                 return NotFound();
             }
 
-            var incomeCategoryModel = await _context.IncomeCategories
+            var incomeModel = await _context.Incomes
+                .Include(i => i.incomeCategory)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (incomeCategoryModel == null)
+            if (incomeModel == null)
             {
                 return NotFound();
             }
 
-            return View(incomeCategoryModel);
+            return View(incomeModel);
         }
 
-        // GET: IncomeCategory/Create
+        // GET: Income/Create
         public IActionResult Create()
         {
-            return View();
+            var income = new IncomeModel
+            {
+                IncomeCategories = _context.IncomeCategories.ToList(),
+            };
+            ViewData["CategoryID"] = new SelectList(_context.IncomeCategories, "Id", "Id");
+            return View(income);
         }
 
-        // POST: IncomeCategory/Create
+        // POST: Income/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] IncomeCategoryModel incomeCategoryModel)
+        public async Task<IActionResult> Create([Bind("Id,incCategoryID,Name,Description,Amount,Date,CreatedAt")] IncomeModel incomeModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(incomeCategoryModel);
+                //incomeModel.incCategoryID = ;
+                _context.Add(incomeModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(incomeCategoryModel);
+            ViewData["CategoryID"] = new SelectList(_context.IncomeCategories, "Id", "Id", incomeModel.incCategoryID);
+            return View(incomeModel);
         }
 
-        // GET: IncomeCategory/Edit/5
+        // GET: Income/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -72,22 +82,24 @@ namespace FinFlow.Models
                 return NotFound();
             }
 
-            var incomeCategoryModel = await _context.IncomeCategories.FindAsync(id);
-            if (incomeCategoryModel == null)
+            var incomeModel = await _context.Incomes.FindAsync(id);
+            if (incomeModel == null)
             {
                 return NotFound();
             }
-            return View(incomeCategoryModel);
+            ViewData["CategoryID"] = new SelectList(_context.IncomeCategories, "Id", "Id", incomeModel.incCategoryID);
+            ViewData["Categories"] = _context.IncomeCategories.ToList();
+            return View(incomeModel);
         }
 
-        // POST: IncomeCategory/Edit/5
+        // POST: Income/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] IncomeCategoryModel incomeCategoryModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,incCategoryID,Name,Description,Amount,Date,CreatedAt")] IncomeModel incomeModel)
         {
-            if (id != incomeCategoryModel.Id)
+            if (id != incomeModel.Id)
             {
                 return NotFound();
             }
@@ -96,12 +108,12 @@ namespace FinFlow.Models
             {
                 try
                 {
-                    _context.Update(incomeCategoryModel);
+                    _context.Update(incomeModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!IncomeCategoryModelExists(incomeCategoryModel.Id))
+                    if (!IncomeModelExists(incomeModel.Id))
                     {
                         return NotFound();
                     }
@@ -112,10 +124,11 @@ namespace FinFlow.Models
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(incomeCategoryModel);
+            ViewData["CategoryID"] = new SelectList(_context.IncomeCategories, "Id", "Id", incomeModel.incCategoryID);
+            return View(incomeModel);
         }
 
-        // GET: IncomeCategory/Delete/5
+        // GET: Income/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -123,34 +136,35 @@ namespace FinFlow.Models
                 return NotFound();
             }
 
-            var incomeCategoryModel = await _context.IncomeCategories
+            var incomeModel = await _context.Incomes
+                .Include(i => i.incomeCategory)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (incomeCategoryModel == null)
+            if (incomeModel == null)
             {
                 return NotFound();
             }
 
-            return View(incomeCategoryModel);
+            return View(incomeModel);
         }
 
-        // POST: IncomeCategory/Delete/5
+        // POST: Income/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var incomeCategoryModel = await _context.IncomeCategories.FindAsync(id);
-            if (incomeCategoryModel != null)
+            var incomeModel = await _context.Incomes.FindAsync(id);
+            if (incomeModel != null)
             {
-                _context.IncomeCategories.Remove(incomeCategoryModel);
+                _context.Incomes.Remove(incomeModel);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool IncomeCategoryModelExists(int id)
+        private bool IncomeModelExists(int id)
         {
-            return _context.IncomeCategories.Any(e => e.Id == id);
+            return _context.Incomes.Any(e => e.Id == id);
         }
     }
 }

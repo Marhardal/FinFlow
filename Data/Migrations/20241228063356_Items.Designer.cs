@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinFlow.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241227175735_IncomeCategories")]
-    partial class IncomeCategories
+    [Migration("20241228063356_Items")]
+    partial class Items
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,43 +24,6 @@ namespace FinFlow.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("FinFlow.Models.BudgetModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(16, 2)
-                        .HasColumnType("decimal(16,2)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ExpenseModelId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("remindon")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExpenseModelId");
-
-                    b.ToTable("Budgets");
-                });
 
             modelBuilder.Entity("FinFlow.Models.CategoryModel", b =>
                 {
@@ -136,43 +99,6 @@ namespace FinFlow.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(16, 2)
-                        .HasColumnType("decimal(16,2)");
-
-                    b.Property<int?>("BudgetID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Notes")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Quantity")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BudgetID");
-
-                    b.HasIndex("ItemId");
-
-                    b.ToTable("Expenses");
-                });
-
             modelBuilder.Entity("FinFlow.Models.IncomeCategoryModel", b =>
                 {
                     b.Property<int>("Id")
@@ -181,12 +107,83 @@ namespace FinFlow.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("IncomeModelId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IncomeModelId");
+
                     b.ToTable("IncomeCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Salary"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Freelance"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Investments"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Bonus"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Commissions"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Gifts"
+                        });
+                });
+
+            modelBuilder.Entity("FinFlow.Models.IncomeModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("incCategoryID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("incCategoryID");
+
+                    b.ToTable("Incomes");
                 });
 
             modelBuilder.Entity("FinFlow.Models.ItemsModel", b =>
@@ -200,9 +197,6 @@ namespace FinFlow.Data.Migrations
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ExpenseModelId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Measurement")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -214,8 +208,6 @@ namespace FinFlow.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("ExpenseModelId");
 
                     b.ToTable("Items");
                 });
@@ -422,13 +414,6 @@ namespace FinFlow.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("FinFlow.Models.BudgetModel", b =>
-                {
-                    b.HasOne("FinFlow.Models.ExpenseModel", null)
-                        .WithMany("Budgets")
-                        .HasForeignKey("ExpenseModelId");
-                });
-
             modelBuilder.Entity("FinFlow.Models.CategoryModel", b =>
                 {
                     b.HasOne("FinFlow.Models.ItemsModel", null)
@@ -436,31 +421,27 @@ namespace FinFlow.Data.Migrations
                         .HasForeignKey("ItemsModelId");
                 });
 
-            modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
+            modelBuilder.Entity("FinFlow.Models.IncomeCategoryModel", b =>
                 {
-                    b.HasOne("FinFlow.Models.BudgetModel", "Budget")
-                        .WithMany("expenses")
-                        .HasForeignKey("BudgetID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("FinFlow.Models.IncomeModel", null)
+                        .WithMany("IncomeCategories")
+                        .HasForeignKey("IncomeModelId");
+                });
 
-                    b.HasOne("FinFlow.Models.ItemsModel", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemId");
+            modelBuilder.Entity("FinFlow.Models.IncomeModel", b =>
+                {
+                    b.HasOne("FinFlow.Models.IncomeCategoryModel", "incomeCategory")
+                        .WithMany("incomes")
+                        .HasForeignKey("incCategoryID");
 
-                    b.Navigation("Budget");
-
-                    b.Navigation("Item");
+                    b.Navigation("incomeCategory");
                 });
 
             modelBuilder.Entity("FinFlow.Models.ItemsModel", b =>
                 {
                     b.HasOne("FinFlow.Models.CategoryModel", "Category")
-                        .WithMany("Items")
+                        .WithMany()
                         .HasForeignKey("CategoryId");
-
-                    b.HasOne("FinFlow.Models.ExpenseModel", null)
-                        .WithMany("items")
-                        .HasForeignKey("ExpenseModelId");
 
                     b.Navigation("Category");
                 });
@@ -516,21 +497,14 @@ namespace FinFlow.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FinFlow.Models.BudgetModel", b =>
+            modelBuilder.Entity("FinFlow.Models.IncomeCategoryModel", b =>
                 {
-                    b.Navigation("expenses");
+                    b.Navigation("incomes");
                 });
 
-            modelBuilder.Entity("FinFlow.Models.CategoryModel", b =>
+            modelBuilder.Entity("FinFlow.Models.IncomeModel", b =>
                 {
-                    b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("FinFlow.Models.ExpenseModel", b =>
-                {
-                    b.Navigation("Budgets");
-
-                    b.Navigation("items");
+                    b.Navigation("IncomeCategories");
                 });
 
             modelBuilder.Entity("FinFlow.Models.ItemsModel", b =>

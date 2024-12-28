@@ -17,12 +17,6 @@ namespace FinFlow.Data.Migrations
                 type: "int",
                 nullable: true);
 
-            migrationBuilder.AddColumn<int>(
-                name: "ExpenseModelId",
-                table: "Budgets",
-                type: "int",
-                nullable: true);
-
             migrationBuilder.CreateTable(
                 name: "Expenses",
                 columns: table => new
@@ -40,11 +34,6 @@ namespace FinFlow.Data.Migrations
                 {
                     table.PrimaryKey("PK_Expenses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Expenses_Budgets_BudgetID",
-                        column: x => x.BudgetID,
-                        principalTable: "Budgets",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Expenses_Items_ItemId",
                         column: x => x.ItemId,
                         principalTable: "Items",
@@ -57,26 +46,9 @@ namespace FinFlow.Data.Migrations
                 column: "ExpenseModelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Budgets_ExpenseModelId",
-                table: "Budgets",
-                column: "ExpenseModelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Expenses_BudgetID",
-                table: "Expenses",
-                column: "BudgetID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Expenses_ItemId",
                 table: "Expenses",
                 column: "ItemId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Budgets_Expenses_ExpenseModelId",
-                table: "Budgets",
-                column: "ExpenseModelId",
-                principalTable: "Expenses",
-                principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Items_Expenses_ExpenseModelId",
@@ -90,10 +62,6 @@ namespace FinFlow.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Budgets_Expenses_ExpenseModelId",
-                table: "Budgets");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_Items_Expenses_ExpenseModelId",
                 table: "Items");
 
@@ -104,17 +72,9 @@ namespace FinFlow.Data.Migrations
                 name: "IX_Items_ExpenseModelId",
                 table: "Items");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Budgets_ExpenseModelId",
-                table: "Budgets");
-
             migrationBuilder.DropColumn(
                 name: "ExpenseModelId",
                 table: "Items");
-
-            migrationBuilder.DropColumn(
-                name: "ExpenseModelId",
-                table: "Budgets");
         }
     }
 }

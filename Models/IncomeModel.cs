@@ -7,7 +7,7 @@ namespace FinFlow.Models
     {
         public int Id { get; set; }
 
-        public int? CategoryID { get; set; }
+        public int? incCategoryID { get; set; }
 
         public string? Name { get; set; }
 
@@ -16,13 +16,15 @@ namespace FinFlow.Models
         [Precision(18, 2)]
         public decimal Amount { get; set; }
 
-        public DateOnly Date { get; set; } = default(DateOnly);
+        public DateTime Date { get; set; } = DateTime.Now;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public ICollection<IncomeCategoryModel>? IncomeCategories { get; set; }
+        public ICollection<IncomeCategoryModel> IncomeCategories { get; set; } = new List<IncomeCategoryModel>();
+        
+        //public ICollection<IncomeModel> Incomes{ get; set; } = new List<IncomeModel>();
 
-        [ForeignKey("CategoryID")]
+        [ForeignKey("incCategoryID")]
         public IncomeCategoryModel? incomeCategory { get; set; }
     }
 }

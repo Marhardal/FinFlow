@@ -11,6 +11,12 @@ namespace FinFlow.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<int>(
+                name: "BudgetModelId",
+                table: "Expenses",
+                type: "int",
+                nullable: true);
+
             migrationBuilder.CreateTable(
                 name: "Budgets",
                 columns: table => new
@@ -28,13 +34,37 @@ namespace FinFlow.Data.Migrations
                 {
                     table.PrimaryKey("PK_Budgets", x => x.Id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Expenses_BudgetModelId",
+                table: "Expenses",
+                column: "BudgetModelId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Expenses_Budgets_BudgetModelId",
+                table: "Expenses",
+                column: "BudgetModelId",
+                principalTable: "Budgets",
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Expenses_Budgets_BudgetModelId",
+                table: "Expenses");
+
             migrationBuilder.DropTable(
                 name: "Budgets");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Expenses_BudgetModelId",
+                table: "Expenses");
+
+            migrationBuilder.DropColumn(
+                name: "BudgetModelId",
+                table: "Expenses");
         }
     }
 }
