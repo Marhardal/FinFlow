@@ -15,6 +15,8 @@ namespace FinFlow.Data
 
         public DbSet<IncomeCategoryModel> IncomeCategories { get; set; }
 
+        public DbSet<TransTypeModel> TransactionType { get; set; }
+
         public DbSet<IncomeModel> Incomes { get; set; }
 
         public DbSet<ItemsModel> Items { get; set; }
