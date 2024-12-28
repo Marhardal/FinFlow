@@ -9,10 +9,12 @@ namespace FinFlow.Models
 
         public int? TypeID { get; set; }
 
+        public int? PaymentTypeID { get; set; }
+
+        public int? LinkedEntityId { get; set; }
+
         [Precision(18, 2)]
         public decimal? Amount { get; set; }
-
-        public string? Method { get; set; }
 
         public string? RefNo { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
@@ -22,6 +24,10 @@ namespace FinFlow.Models
         [ForeignKey("TypeID")]
         public TransTypeModel? TransType { get; set; }
 
-        public ICollection<TransTypeModel>? TransTypes { get; set; }
+        [ForeignKey("PaymentTypeID")]
+        public PaymentTypeModel? PaymentType { get; set; }
+
+        public TransTypeModel? TransTypes { get; set; }
+
     }
 }

@@ -4,6 +4,7 @@ using FinFlow.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinFlow.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241228124436_PaymentTypes")]
+    partial class PaymentTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -318,54 +321,6 @@ namespace FinFlow.Data.Migrations
                     b.ToTable("TransactionType");
                 });
 
-            modelBuilder.Entity("FinFlow.Models.TransactionModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal?>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("LinkedEntityId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PaymentTypeID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RefNo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("TransTypesId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TypeID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PaymentTypeID")
-                        .IsUnique()
-                        .HasFilter("[PaymentTypeID] IS NOT NULL");
-
-                    b.HasIndex("TransTypesId");
-
-                    b.HasIndex("TypeID")
-                        .IsUnique()
-                        .HasFilter("[TypeID] IS NOT NULL");
-
-                    b.ToTable("Transactions");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -620,27 +575,6 @@ namespace FinFlow.Data.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("FinFlow.Models.TransactionModel", b =>
-                {
-                    b.HasOne("FinFlow.Models.PaymentTypeModel", "PaymentType")
-                        .WithOne("Transaction")
-                        .HasForeignKey("FinFlow.Models.TransactionModel", "PaymentTypeID");
-
-                    b.HasOne("FinFlow.Models.TransTypeModel", "TransTypes")
-                        .WithMany()
-                        .HasForeignKey("TransTypesId");
-
-                    b.HasOne("FinFlow.Models.TransTypeModel", "TransType")
-                        .WithOne("Transaction")
-                        .HasForeignKey("FinFlow.Models.TransactionModel", "TypeID");
-
-                    b.Navigation("PaymentType");
-
-                    b.Navigation("TransType");
-
-                    b.Navigation("TransTypes");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -720,16 +654,6 @@ namespace FinFlow.Data.Migrations
             modelBuilder.Entity("FinFlow.Models.ItemsModel", b =>
                 {
                     b.Navigation("Categories");
-                });
-
-            modelBuilder.Entity("FinFlow.Models.PaymentTypeModel", b =>
-                {
-                    b.Navigation("Transaction");
-                });
-
-            modelBuilder.Entity("FinFlow.Models.TransTypeModel", b =>
-                {
-                    b.Navigation("Transaction");
                 });
 #pragma warning restore 612, 618
         }

@@ -17,6 +17,8 @@ namespace FinFlow.Data
 
         public DbSet<TransTypeModel> TransactionType { get; set; }
 
+        public DbSet<PaymentTypeModel> PaymentTypes { get; set; }
+
         public DbSet<IncomeModel> Incomes { get; set; }
 
         public DbSet<ItemsModel> Items { get; set; }
@@ -25,9 +27,11 @@ namespace FinFlow.Data
 
         public DbSet<BudgetModel> Budgets { get; set; }
 
+        public DbSet<TransactionModel> Transactions { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            //base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<ExpenseModel>()
               .HasOne(e => e.Budget) // Each Expense has one Budget
@@ -44,6 +48,16 @@ namespace FinFlow.Data
                 .HasOne(a => a.incomeCategory)
                 .WithMany(d => d.incomes)
                 .HasForeignKey(a => a.incCategoryID);
+
+            modelBuilder.Entity<TransactionModel>()
+                .HasOne(p => p.PaymentType)
+                .WithOne(t => t.Transaction)
+                .HasForeignKey<TransactionModel>(t => t.PaymentTypeID);
+
+            modelBuilder.Entity<TransactionModel>()
+                .HasOne(tr => tr.TransType)
+                .WithOne(t => t.Transaction)
+                .HasForeignKey<TransactionModel>(t => t.TypeID);
 
             modelBuilder.Entity<IncomeCategoryModel>().HasData(
                 new IncomeCategoryModel { Id = 1, Name = "Salary"/*, Description = "Monthly salary from employment" */},
