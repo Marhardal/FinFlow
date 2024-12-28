@@ -82,6 +82,25 @@ namespace FinFlow.Data
                 new CategoryModel { Id = 10, Name = "Miscellaneous", /*Description = "Travel, gifts, pet care"*/ }
             );
 
+            // Call the seed method
+            modelBuilder.Entity<PaymentTypeModel>().HasData(
+                new PaymentTypeModel { ID = 1, Name = "Cash", },
+                new PaymentTypeModel { ID = 2, Name = "Credit Card",},
+                new PaymentTypeModel { ID = 3, Name = "Debit Card", },
+                new PaymentTypeModel { ID = 4, Name = "Bank Transfer", },
+                new PaymentTypeModel { ID = 5, Name = "Mobile Money",},
+                new PaymentTypeModel { ID = 6, Name = "Cheque",},
+                new PaymentTypeModel { ID = 7, Name = "Cryptocurrency",},
+                new PaymentTypeModel { ID = 8, Name = "Digital Wallets",},
+                new PaymentTypeModel { ID = 9, Name = "Prepaid Card",},
+                new PaymentTypeModel { ID = 10, Name = "Online Payment Gateways", }
+            );
+
+            modelBuilder.Entity<TransTypeModel>().HasData(
+                new TransTypeModel { Id = 1, Name = "Income"},
+                new TransTypeModel { Id = 2, Name = "Expense" }
+            );
+
             base.OnModelCreating(modelBuilder);
         }
     }
