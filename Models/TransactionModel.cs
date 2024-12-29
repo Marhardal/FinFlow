@@ -30,5 +30,7 @@ namespace FinFlow.Models
 
         public TransTypeModel? TransTypes { get; set; }
 
+        public ICollection<AttachmentModel>? Attachments { get; set; }
+
     }
 }

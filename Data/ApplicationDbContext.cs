@@ -29,6 +29,8 @@ namespace FinFlow.Data
 
         public DbSet<TransactionModel> Transactions { get; set; }
 
+        public DbSet<AttachmentModel> Attachments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //base.OnModelCreating(modelBuilder);
@@ -48,6 +50,12 @@ namespace FinFlow.Data
                 .HasOne(a => a.incomeCategory)
                 .WithMany(d => d.incomes)
                 .HasForeignKey(a => a.incCategoryID);
+
+
+            modelBuilder.Entity<AttachmentModel>()
+                .HasOne(a => a.Transaction)
+                .WithMany(t => t.Attachments)
+                .HasForeignKey(a => a.TransactionID);
 
             modelBuilder.Entity<TransactionModel>()
                 .HasOne(p => p.PaymentType)
