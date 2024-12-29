@@ -14,12 +14,13 @@ namespace FinFlow.Models
         public int? LinkedEntityId { get; set; }
 
         [Precision(18, 2)]
-        public decimal? Amount { get; set; }
+        public decimal Amount { get; set; } = decimal.Zero;
 
         public string? RefNo { get; set; }
+
         public DateTime Date { get; set; } = DateTime.Now;
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? CreatedAt { get; set; } = DateTime.UtcNow;
 
         [ForeignKey("TypeID")]
         public TransTypeModel? TransType { get; set; }

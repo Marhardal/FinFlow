@@ -1,0 +1,67 @@
+﻿@using System.Globalization
+@model FinFlow.Models.TransactionModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Edit Transaction</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group my-3">
+                <label asp-for="TypeID" class="control-label">Type</label>
+                <select asp-for="TypeID" class="form-control" asp-items="ViewBag.TypeID"></select>
+                <span asp-validation-for="TypeID" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="PaymentTypeID" class="control-label">Payment Type</label>
+                <select asp-for="PaymentTypeID" class="form-control" asp-items="ViewBag.PaymentTypeID"></select>
+                <span asp-validation-for="PaymentTypeID" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="LinkedEntityId" class="control-label">Budget or Income ID</label>
+                <input asp-for="LinkedEntityId" class="form-control" />
+                <span asp-validation-for="LinkedEntityId" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Amount" class="control-label"></label>
+                <label asp-for="Amount" class="control-label"></label>
+                @{
+                    CultureInfo culture = new CultureInfo("en-MW");
+                    var numberFormat = (NumberFormatInfo)culture.NumberFormat.Clone();
+                    numberFormat.CurrencySymbol = ""; // Remove the currency symbol
+                    string formatted = Model.Amount.ToString("C", numberFormat).Trim();
+                }
+                <input asp-for="Amount" class="form-control" oninput="formatCurrency(this)" value="@formatted"/>
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="RefNo" class="control-label"></label>
+                <input asp-for="RefNo" class="form-control" />
+                <span asp-validation-for="RefNo" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <div class="col-2">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+                <div class="col">
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
