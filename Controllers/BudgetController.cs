@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using FinFlow.Data;
 using FinFlow.Models;
 using FinFlow.Data.Migrations;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Globalization;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
 
 namespace FinFlow.Controllers
 {
@@ -156,5 +160,61 @@ namespace FinFlow.Controllers
         {
             return _context.Budgets.Any(e => e.Id == id);
         }
+
+        private async Task<BudgetModel> GetBudgetDetailsForPdfAsync(int id)
+        {
+            var budgetModel = await _context.Budgets
+                .Include(b => b.expenses)
+                .ThenInclude(e => e.Item) // Include related Item if it's a navigation property
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            return budgetModel;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GenerateBudgetPdf(int id)
+        {
+            var budgetModel = await GetBudgetDetailsForPdfAsync(id);
+            if (budgetModel == null)
+            {
+                return NotFound("Budget not found.");
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                // Create a PDF document
+                var document = new iTextSharp.text.Document();
+                PdfWriter.GetInstance(document, stream);
+
+                document.Open();
+
+                // Add a title
+                document.Add(new iTextSharp.text.Paragraph($"Budget Details: {budgetModel.Name}"));
+
+                // Create a table for budget expenses
+                var table = new PdfPTable(3); // 4 columns: Item, Amount, Quantity, Date
+                table.AddCell("Item");
+                table.AddCell("Amount");
+                table.AddCell("Quantity");
+                //table.AddCell("Date");
+
+                // Loop through the expenses
+                foreach (var expense in budgetModel.expenses)
+                {
+                    table.AddCell(expense.Item?.Name ?? "N/A");
+                    table.AddCell(expense.Amount.ToString("C", new CultureInfo("en-MW")));
+                    table.AddCell(expense.Quantity.ToString());
+                    //table.AddCell(expense.Date.ToString());
+                }
+
+                // Add table to the document
+                document.Add(table);
+                document.Close();
+
+                // Return the PDF file
+                return File(stream.ToArray(), "application/pdf", budgetModel.Name + " Expenses.pdf");
+            }
+        }
+
     }
 }

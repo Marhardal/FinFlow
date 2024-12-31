@@ -55,8 +55,12 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <form asp-action="GenerateBudgetPdf">
+        <input type="hidden" name="id" value="@Model?.Id" />
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+        <a asp-action="Index">Back to List</a> |
+        <input type="submit" value="Download" class="btn btn-primary" />
+    </form>
 </div>
 
 <hr />
@@ -116,4 +120,19 @@
             </tr>
         }
     </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4" style="text-align: right; font-weight: bold;">
+                Subtotal:
+            </td>
+            <td>
+                @{
+                    // Calculate the subtotal
+                    var subtotal = Model.expenses.Sum(x => x.Amount);
+                    string formattedSubtotal = subtotal.ToString("C", culture).Trim();
+                }
+                @formattedSubtotal
+            </td>
+        </tr>
+    </tfoot>
 </table>

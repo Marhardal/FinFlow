@@ -15,7 +15,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group my-3">
                 <input type="hidden" name="BudgetID" value="@ViewBag.BudgetID" />
-                <label asp-for="ItemId" class="control-label"></label>
+                <label asp-for="ItemId" class="control-label">Item Name</label>
                 <select asp-for="ItemId" class ="form-control">
                     @foreach (var item in Model.items)
                     {
